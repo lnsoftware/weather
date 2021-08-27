@@ -1,0 +1,1 @@
+package com.mysoft.weather.model;

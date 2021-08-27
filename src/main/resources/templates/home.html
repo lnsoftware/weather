@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header>
+	<link rel="stylesheet" th:href="@{/css/style.css}"/>
+	<script type="text/javascript" th:src="@{/js/jquery-1.10.1.min.js}"></script>
+
+	<title> Weather Search </title>
+</header>
+<body>
+	<div id="app" style="margin: 20px 20%">
+		<form action="">
+			<select id="req_city">
+				<option th:each="item:${cityList}" th:text="${item}" th></option>
+			</select>
+			<input type="button" value="Search" onclick="search()" />
+		</form>
+	</div>
+
+	<div>
+		<table border="0px" cellpadding="1px" cellspacing="1px">
+			<tr>
+				<td>City</td>
+				<td><span id="res_city"></span></td>
+			</tr>
+			<tr>
+				<td>Updated time</td>
+				<td><span id="res_update_time">X</span></td>
+			</tr>
+			<tr>
+				<td>Weather</td>
+				<td><span id="res_weather">X</span></td>
+			</tr>
+			<tr>
+				<td>Temperature</td>
+				<td><span id="res_temperature">X</span></td>
+			</tr>
+			<tr>
+				<td>Wind</td>
+				<td><span id="res_wind">X</span></td>
+			</tr>
+		</table>
+	</div>
+	<script>
+		function search() {
+			var city = $("#req_city option:selected").val();
+			if (city) {
+				$.ajax({
+					type: "get",
+					url: "/" + city,
+					success: function(data) {
+
+					}
+				});
+			}
+		}
+	</script>
+</body>
+</html>

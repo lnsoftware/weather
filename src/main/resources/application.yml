@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /weather
+
+spring:
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    cache: false
+
+weather:
+  apiKey: 5c05cc0eb7c34fc988384415212408
+  url: http://api.weatherapi.com/v1/current.json?key={1}&q={2}&aqi=no
+  cityList:
+    - Sydney
+    - Melbourne
+    - Wollongong
+
+http:
+  connectionTimeout: 30000
+  readTimeout: 30000

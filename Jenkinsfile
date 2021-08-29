@@ -41,7 +41,9 @@ pipeline {
         stage('Deploy to Server') {
             steps {
                 timeout(time: 40, unit: 'SECONDS') {
-                    sh 'bash ./startup.sh ${JOB_NAME%%/*} ${registryUrl}/${JOB_NAME%%/*}:${env}　${env}'
+                    withCredentials([usernamePassword(credentialsId: 'hub.docker.com', passwordVariable: 'password', usernameVariable: 'username')]) {
+                        sh 'bash deploy/startup.sh ${username} ${password}'
+                    }
                 }
             }
         }

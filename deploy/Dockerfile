@@ -1,6 +1,7 @@
 FROM openjdk:8u181-jdk-alpine
 
 ARG workdir=/app
+RUN mkdir ${workdir}
 VOLUME ${workdir}
 WORKDIR ${workdir}
 

@@ -34,7 +34,6 @@ pipeline {
                         }
                     }
                 }
-                sh '''rm -rf `ls | egrep -v '(Jenkinsfile|startup.sh)'`'''
             }
         }
 

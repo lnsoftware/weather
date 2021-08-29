@@ -2,33 +2,26 @@ package com.mysoft.weather.exception;
 
 public class BuzzException extends RuntimeException {
 
+    private final String code;
+
     private final String message;
 
-    private final String errorReason;
-
-    public BuzzException(String message, String errorReason) {
-        this.message = message;
-        this.errorReason = errorReason;
-    }
-
     public BuzzException(ErrorEnum errorEnum) {
+        this.code = errorEnum.getCode();
         this.message = errorEnum.getMessage();
-        this.errorReason = errorEnum.getReason();
     }
 
-    public BuzzException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String message1, String errorReason) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public BuzzException(String message, String code, String message1) {
+        this.code = code;
         this.message = message1;
-        this.errorReason = errorReason;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     @Override
     public String getMessage() {
         return message;
     }
-
-    public String getErrorReason() {
-        return errorReason;
-    }
-
 }

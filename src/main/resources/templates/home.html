@@ -3,52 +3,77 @@
 <header>
 	<link rel="stylesheet" th:href="@{/css/style.css}"/>
 	<script type="text/javascript" th:src="@{/js/jquery-1.10.1.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/jquery.blockUI.min.js}"></script>
 
 	<title> Weather Search </title>
 </header>
 <body>
-	<div id="app" style="margin: 20px 20%">
-		<form action="">
-			<select id="req_city">
-				<option th:each="item:${cityList}" th:text="${item}" th></option>
-			</select>
-			<input type="button" value="Search" onclick="search()" />
-		</form>
+	<div id="content" style="width: 500px">
+		<div id="condition" style="margin: 10px 0px">
+			<form id="weather-search-form">
+				<select id="req_city">
+					<option th:each="item:${cityList}" th:text="${item}" th></option>
+				</select>
+				<input type="button" value="Search" onclick="search()" />
+			</form>
+		</div>
+		<div id="result">
+			<table border="0px" cellpadding="3px" cellspacing="1px" bgcolor="blue">
+				<tr>
+					<td bgcolor="#f0f8ff" width="150px">City</td>
+					<td bgcolor="#e6e6fa" width="200px"><span id="res_city"></span></td>
+				</tr>
+				<tr>
+					<td bgcolor="#f0f8ff" width="150px">Updated time</td>
+					<td bgcolor="#e6e6fa" width="200px"><span id="res_update_time"></span></td>
+				</tr>
+				<tr>
+					<td bgcolor="#f0f8ff" width="150px">Weather</td>
+					<td bgcolor="#e6e6fa" width="200px"><span id="res_weather"></span></td>
+				</tr>
+				<tr>
+					<td bgcolor="#f0f8ff" width="150px">Temperature</td>
+					<td bgcolor="#e6e6fa" width="200px"><span id="res_temperature"></span></td>
+				</tr>
+				<tr>
+					<td bgcolor="#f0f8ff" width="150px">Wind</td>
+					<td bgcolor="#e6e6fa" width="200px"><span id="res_wind"></span></td>
+				</tr>
+			</table>
+		</div>
 	</div>
 
-	<div>
-		<table border="0px" cellpadding="1px" cellspacing="1px">
-			<tr>
-				<td>City</td>
-				<td><span id="res_city"></span></td>
-			</tr>
-			<tr>
-				<td>Updated time</td>
-				<td><span id="res_update_time">X</span></td>
-			</tr>
-			<tr>
-				<td>Weather</td>
-				<td><span id="res_weather">X</span></td>
-			</tr>
-			<tr>
-				<td>Temperature</td>
-				<td><span id="res_temperature">X</span></td>
-			</tr>
-			<tr>
-				<td>Wind</td>
-				<td><span id="res_wind">X</span></td>
-			</tr>
-		</table>
-	</div>
 	<script>
 		function search() {
 			var city = $("#req_city option:selected").val();
 			if (city) {
 				$.ajax({
 					type: "get",
-					url: "/" + city,
+					url: "/weather/" + city,
+					beforeSend:function(XMLHttpRequest){
+						$.blockUI({
+							fadeIn : 0,
+							fadeOut : 0,
+							message: '<h1>loading...</h1>',
+							css: { border: '1px solid #a00' },
+							showOverlay : true
+						});
+					},
 					success: function(data) {
-
+						if (data.message.message == 'OK') {
+							$('#res_city').text(data.content.city);
+							$('#res_update_time').text(data.content.updateTime);
+							$('#res_weather').text(data.content.weather);
+							$('#res_temperature').text(data.content.temperature);
+							$('#res_wind').text(data.content.wind);
+						}
+					},
+					complete:function(XMLHttpRequest, textStatus){
+						$.unblockUI();
+					},
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						alert('error, pls try again');
+						$("#loading").empty();
 					}
 				});
 			}

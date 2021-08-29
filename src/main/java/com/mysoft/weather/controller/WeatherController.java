@@ -1,11 +1,14 @@
 package com.mysoft.weather.controller;
 
 import com.mysoft.weather.config.WeatherProperty;
+import com.mysoft.weather.model.dto.AnswerDTO;
 import com.mysoft.weather.model.dto.WeatherDTO;
 import com.mysoft.weather.service.WeatherService;
+import com.mysoft.weather.util.http.ResponseFactory;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,9 +47,9 @@ public class WeatherController {
      */
     @ResponseBody
     @RequestMapping(value = "/{city}", method = RequestMethod.GET)
-    public ResponseEntity<WeatherDTO> query(@PathVariable(name = "city") String city) {
+    public ResponseEntity<AnswerDTO<WeatherDTO>> query(@PathVariable(name = "city") String city) {
         WeatherDTO dto = weatherService.query(city);
 
-        return ResponseEntity.ok(dto);
+        return ResponseFactory.success(HttpStatus.OK, dto);
     }
 }

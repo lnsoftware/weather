@@ -10,6 +10,8 @@ spring:
     servlet:
       content-type: text/html
     cache: false
+#  mvc:
+#    static-path-pattern: /static/**
 
 weather:
   apiKey: 5c05cc0eb7c34fc988384415212408

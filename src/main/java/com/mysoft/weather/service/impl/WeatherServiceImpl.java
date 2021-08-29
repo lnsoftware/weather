@@ -15,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.Objects;
 
 @Slf4j
@@ -37,7 +39,7 @@ public class WeatherServiceImpl implements WeatherService {
         String url = ParamUtil.completeUrl(weatherProperty.getUrl(), weatherProperty.getApiKey(), city);
         WeatherVO result = restTemplate.getForObject(url, WeatherVO.class);
         if (Objects.isNull(result)) {
-            throw  new BuzzException(ErrorEnum.WEATHER_EMPTY_RESULT);
+            throw new BuzzException(ErrorEnum.WEATHER_EMPTY_RESULT);
         }
 
         WeatherDTO weatherDTO = WeatherDTOMapper.INSTANCE.toWeatherDTO(result);

@@ -31,7 +31,7 @@ pipeline {
             steps {
                 echo 'build project with maven'
                 script {
-                    sh 'source /etc/profile && mvn clean package -pl ${JOB_NAME%%/*} -am -amd -P${env} -Dmaven.test.skip=true'     //springboot maven 多模块 jenkins 单独打包子项目
+                    sh 'mvn clean package -Dmaven.test.skip=true'     //springboot maven 多模块 jenkins 单独打包子项目
                 }
             }
         }

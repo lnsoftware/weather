@@ -1,10 +1,8 @@
 pipeline {
     agent any
-
+    
     environment {
-        registryUrl= "192.168.1.110:5000"
-        registry_user= "xxx"
-        registry_pass= "xxx"
+        registry_space = 'lnsoftware'
     }
 
     options {
@@ -14,24 +12,12 @@ pipeline {
     }
 
     stages{
-        stage('Print Message') {
-            steps {
-                echo "workspace: ${WORKSPACE}  build_id: ${BUILD_ID}  branch(gitlab分支名): ${env.BRANCH_NAME}"
-                echo "registryUrl: ${registryUrl}"
-           }
-        }
 
-        stage('Delete Workspace') {
-            steps {
-                echo "clean workspace: ${WORKSPACE}"
-                deleteDir()
-            }
-        }
         stage('Maven Build') {
             steps {
                 echo 'build project with maven'
                 script {
-                    sh 'mvn clean package -Dmaven.test.skip=true'     //springboot maven 多模块 jenkins 单独打包子项目
+                    sh 'mvn clean package -Dmaven.test.skip=true'
                 }
             }
         }
@@ -39,26 +25,22 @@ pipeline {
             steps {
                 echo 'build and push docker image'
                 dir ('./') {
-                    script {
-                        sh 'mv ${JOB_NAME%%/*}/Dockerfile  ./'
-                        sh 'docker login  --username=${registry_user} --password=${registry_pass}   ${registryUrl}'
-                        def app = docker.build('${registryUrl}/${JOB_NAME%%/*}:${env}')
-                        app.push('${env}')
-                        sh 'docker rmi ${registryUrl}/${JOB_NAME%%/*}:${env}'
+                    withCredentials([usernamePassword(credentialsId: 'hub.docker.com', passwordVariable: 'password', usernameVariable: 'username')]) {
+                        script {
+                            sh 'docker login --username=${username} --password=${password}'
+                            def app = docker.build('${registry_space}/${JOB_NAME%%/*}', '-f deploy/Dockerfile .')
+                            app.push('latest')
+                            sh 'docker rmi ${registry_space}/${JOB_NAME%%/*}'
+                        }
                     }
                 }
-                sh '''rm -rf `ls | egrep -v '(Jenkinsfile|start.sh)'`'''
+                sh '''rm -rf `ls | egrep -v '(Jenkinsfile|startup.sh)'`'''
             }
         }
 
         stage('Deploy to Server') {
-            //when {
-            //    beforeAgent true
-            //    branch "${env.BRANCH_NAME}"
-            //}
             steps {
                 timeout(time: 40, unit: 'SECONDS') {
-                    //部署到${env}环境
                     sh 'bash ./startup.sh ${JOB_NAME%%/*} ${registryUrl}/${JOB_NAME%%/*}:${env}　${env}'
                 }
             }

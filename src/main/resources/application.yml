@@ -16,7 +16,9 @@ spring:
 weather:
   apiKey: 5c05cc0eb7c34fc988384415212408
   url: http://api.weatherapi.com/v1/current.json?key={1}&q={2}&aqi=no
-  cityList:
+  countryList:
+  - name: Australian
+    cityList:
     - Sydney
     - Melbourne
     - Wollongong

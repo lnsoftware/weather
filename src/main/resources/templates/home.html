@@ -12,7 +12,9 @@
 		<div id="condition" style="margin: 10px 0px">
 			<form id="weather-search-form">
 				<select id="req_city">
-					<option th:each="item:${cityList}" th:text="${item}" th></option>
+					<optgroup th:each="country:${countryList}" th:label="${country.name}">
+						<option th:each="city:${country.cityList}" th:text="${city}"></option>
+					</optgroup>
 				</select>
 				<input type="button" value="Search" onclick="search()" />
 			</form>

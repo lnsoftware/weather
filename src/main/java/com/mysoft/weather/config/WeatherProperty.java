@@ -15,6 +15,13 @@ public class WeatherProperty {
 
     private String url;
 
-    private List<String> cityList;
+    private List<Country> countryList;
 
+    @Data
+    public static class Country {
+
+        private String name;
+
+        private List<String> cityList;
+    }
 }

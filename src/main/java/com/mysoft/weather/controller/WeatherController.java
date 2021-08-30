@@ -34,8 +34,8 @@ public class WeatherController {
      */
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String home(Model model) {
-        List<String> cityList = weatherProperty.getCityList();
-        model.addAttribute("cityList", cityList);
+        List<WeatherProperty.Country> countryList = weatherProperty.getCountryList();
+        model.addAttribute("countryList", countryList);
 
         return "home";
     }
